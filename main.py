@@ -37,6 +37,13 @@ _extra_origins = [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_default_origins + _extra_origins,
+    # Vercel gives every preview deployment its own random subdomain
+    # (my-app-<hash>-<team>.vercel.app), so pinning one exact origin in
+    # FRONTEND_ORIGIN only ever covers production. This regex additionally
+    # allows any *.vercel.app origin so preview URLs work without having to
+    # update Render on every push. Tighten this if you ever need to lock it
+    # down to only your own team's subdomains.
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
